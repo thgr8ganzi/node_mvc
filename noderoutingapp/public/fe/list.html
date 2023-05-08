@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글목록</title>
+</head>
+<body>
+<h1>게시글목록 프론트 엔드 페이지</h1>
+<a href="./create.html">글쓰기</a>
+<table>
+    <thead>
+        <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>조회수</th>
+            <th>ip 주소</th>
+            <th>게시여부</th>
+            <th>수정일시</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+
+    </tbody>
+</table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+<!--해당 list.html 웹페이지가 브라우저에 모두 로딩 완료되면 콜백함수 실행-->
+    $(document).ready(function (){
+    //     백엔드 주소에서 전체 게시글 목록 데이터르 조회해옵니다.
+    //     jquery 는 ajax 기술로 백엔드 주소에서 데이터를 조회해오는 기능제공
+        $.get('http://localhost:3000/api/articles/list',function (result){
+        //     호출 결과물이 result 값으로 전달된다.
+            console.log(result)
+        //     프론트 엔드에서(웹브라우저에서) 동적으로 데이터 기반 html 코드를 생성해 tbody 태그에 append 한다.
+            $.each(result,function (i,item){
+                let tag = `
+                <tr>
+                    <td>${item.aid}</td>
+                    <td><a href="./modify.html?aid=${item.aid}">${item.title}</a></td>
+                    <td>${item.view_cnt}</td>
+                    <td>${item.ip_address}</td>
+                    <td>${item.display_yn}</td>
+                    <td>${item.modify_date}</td>
+                </tr>
+                `;
+                $('#list').append(tag)
+            });
+        });
+    });
+</script>
+</body>
+</html>

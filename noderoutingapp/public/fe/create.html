@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 신규등록</title>
+</head>
+<body>
+<h1>게시글 신규등록</h1>
+제목: <input type="text" placeholder="제목을 입력하세요." id="title"><br>
+내용: <textarea rows="20" cols="10" style="width: 300px" id="content"></textarea><br>
+게시여부: <select id="display_yn">
+  <option value="Y">게시</option>
+  <option value="N">게시 안함</option>
+</select>
+<br>
+<hr>
+<input type="button" value="등록" id="btnSave">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+$('#btnSave').click(function (){
+    let title = $('#title').val();
+    let content = $('#content').val();
+    let display_yn = $('#display_yn').val();
+
+    let article = {
+        title,
+        content,
+        display_yn,
+    }
+    $.post('http://localhost:3000/api/articles/create', article).done(function (result){
+        console.log(result)
+        alert('등록완료.')
+        location.href = 'list.html'
+    });
+})
+</script>
+</body>
+</html>

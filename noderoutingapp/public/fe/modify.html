@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+</head>
+<body>
+<h1>게시글 수정</h1>
+제목: <input type="text" placeholder="제목을 입력하세요." id="title"><br>
+내용: <textarea rows="20" cols="10" style="width: 300px" id="content"></textarea><br>
+게시여부: <select id="display_yn">
+    <option value="Y">게시</option>
+    <option value="N">게시 안함</option>
+</select>
+<br>
+<hr>
+<input type="button" value="수정" id="btnSave">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    function urlParam(name){
+        //자바스크립트 정규식을 이용해 현재페이지 URL에서 전달받은 키값에 대한 쿼리스트링 값을 추출한다.
+        var results = new RegExp('[\?&]'+name+'=([^&#]*)').exec(window.location.href);
+        return results[1] || 0;
+    }
+    let aid = urlParam("aid");
+<!--    수정 웹페이지가 모두 렌더링이 완료되면 백엔드에서 해당 게시글 고유번호 정보를 기반으로 단일 게시글 정보를 조회한다.-->
+    $(document).ready(function (){
+        $.get(`http://localhost:3000/api/articles/modify?aid=${aid}`, function (result){
+            console.log(result)
+            $('#title').val(result.title)
+            $('#content').val(result.content)
+            $('#display_yn').val(result.display_yn)
+        });
+        $('#btnSave').click(function (){
+            let title = $('#title').val();
+            let content = $('#content').val();
+            let display_yn = $('#display_yn').val();
+
+            let article = {
+                aid,
+                title,
+                content,
+                display_yn,
+            }
+            $.post(`http://localhost:3000/api/articles/modify?aid=${aid}`, article).done(function (result){
+                console.log(result)
+                alert(result.message)
+                location.href = 'list.html'
+            });
+        })
+    });
+</script>
+</body>
+</html>
